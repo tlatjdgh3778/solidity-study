@@ -1,4 +1,3 @@
 ## Cyfrin Updraft Solidity Smart Contract Development
 
-[solidity smart contract](https://updraft.cyfrin.io/courses/solidity)
-W
+[Solidity Smart Contract](https://updraft.cyfrin.io/courses/solidity)
