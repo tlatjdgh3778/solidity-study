@@ -23,7 +23,8 @@ contract SimpleStorage {
     Person[] public listOfPeople;
 
     // 함수를 사용해서 favoritNumber 를 저장함
-    function store(uint256 _favoritNumber) public {
+    // virtual 
+    function store(uint256 _favoritNumber) public virtual  {
         myFavoriteNumber = _favoritNumber;
     }
 
