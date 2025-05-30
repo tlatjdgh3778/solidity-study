@@ -9,7 +9,13 @@
 pragma solidity ^0.8.24;
 
 contract FundMe {
-    function fund() public {}
+    function fund() public payable  {
+        // Allow users to send money
+        // Have a minimum money sent
+        // 1. How do we send ETH to this contract ?
+        // 전역 변수 msg
+        require(msg.value > 1e18, "didn't send enough ETH"); // 1e18 = 1 ETH = 1,000,000,000,000,000,000 = 1 * 10 ** 18
+    }
 
     function widthraw() public {}
 }
