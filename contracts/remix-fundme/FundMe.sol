@@ -44,6 +44,26 @@ contract FundMe {
             address funder = funders[funderIndex];
             addressToAmountedFunded[funder] = 0;
         }
+
+        // reset the array
+        funders = new address[](0);
+        
+        // withdraw the funds
+
+        // Sending ETH
+        // 1. transfer (2300 gas, throws error)
+        // auto revert
+        // msg.sender = address
+        // payable(msg.sender) = payable address
+        payable(msg.sender).transfer(address(this).balance);
+        // 2. send (2300 gas, returns bool)
+        bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        // add revert
+        require(sendSuccess, "Send failed");
+        // 3. call (forward all gas or set gas, returns bool)
+        (bool callSuccess, ) = payable(msg.sender).call{ value: address(this).balance }("");
+        // add revert
+        require(callSuccess, "Call failed");
     }
 }
 
