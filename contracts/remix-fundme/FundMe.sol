@@ -18,6 +18,12 @@ contract FundMe {
     address[] public funders;
     mapping(address funder => uint256 amountFunded) public addressToAmountedFunded;
 
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
     // payable 붙은 함수나 주소만 이더를 전송 받을 수 있다.
     function fund() public payable  {
         // Allow users to send money
@@ -38,6 +44,8 @@ contract FundMe {
         addressToAmountedFunded[msg.sender] += msg.value;
     }
     function widthraw() public {
+        require(msg.sender == owner, "You don't own this contract"); // revert if it's not the owner of this contract
+
         // for loop
         // for(/* starting index, ending index, step amount */)
         for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++){
