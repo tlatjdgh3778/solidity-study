@@ -8,10 +8,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-// npm @chainlink/contracts
-import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import { PriceConverter } from "./PriceConverter.sol";
 
 contract FundMe {
+    using PriceConverter for uint256;
 
     uint256 public minimumUSD = 5 * 1e18;
 
@@ -24,7 +24,9 @@ contract FundMe {
         // Have a minimum money sent
         // 1. How do we send ETH to this contract ?
         // 전역 변수 msg, msg.value 로 전송된 이더 금액을 확인할 수 있
-        require(getConversionRate(msg.value) >= minimumUSD, "didn't send enough ETH"); // 1e18 = 1 ETH = 1,000,000,000,000,000,000 = 1 * 10 ** 18
+        // require(getConversionRate(msg.value) >= minimumUSD, "didn't send enough ETH"); // 1e18 = 1 ETH = 1,000,000,000,000,000,000 = 1 * 10 ** 18
+        require(msg.value.getConversionRate() >= minimumUSD, "didn't send enough ETH"); // 1e18 = 1 ETH = 1,000,000,000,000,000,000 = 1 * 10 ** 18
+        
         // 조건을 만족하지 않으면, 트랜잭션은 revert (되돌리기)됨
         // 거래가 revert 되면, 이 트랜잭션의 모든 상태 변경이 취소된다.
         // 단, 사용자는 사용한 가스는 환불받지 못한다.
@@ -35,31 +37,6 @@ contract FundMe {
         funders.push(msg.sender);
         addressToAmountedFunded[msg.sender] = addressToAmountedFunded[msg.sender] + msg.value;
     }
-
-    // eth 의 가격을 얻는 함수
-    function getPrice() public view returns (uint256) {
-        // address 0x694AA1769357215DE4FAC081bf1f309aDC325306
-        // ABI
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
-        (, int256 price,,,) = priceFeed.latestRoundData();
-        // Price of ETH in terms of USD
-        // 2000.00000000
-        return uint256(price * 1e10);
-    }
-
-    function getConversionRate (uint256 ethAmount) public view returns (uint256) {
-        // 1 ETH
-        // 2000_000000000000000000
-        uint256 ethPrice = getPrice();
-        // (2000_000000000000000000 * 1_000000000000000000) / 1e18
-        uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1e18;
-        return ethAmountInUsd;
-    }
-
-    function getVersion () public view returns (uint256)  {
-        return AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306).version();
-    }
-
     // function widthraw() public {}
 }
 
