@@ -55,11 +55,11 @@ contract FundMe {
         // auto revert
         // msg.sender = address
         // payable(msg.sender) = payable address
-        payable(msg.sender).transfer(address(this).balance);
+        // payable(msg.sender).transfer(address(this).balance);
         // 2. send (2300 gas, returns bool)
-        bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        // bool sendSuccess = payable(msg.sender).send(address(this).balance);
         // add revert
-        require(sendSuccess, "Send failed");
+        // require(sendSuccess, "Send failed");
         // 3. call (forward all gas or set gas, returns bool)
         (bool callSuccess, ) = payable(msg.sender).call{ value: address(this).balance }("");
         // add revert
