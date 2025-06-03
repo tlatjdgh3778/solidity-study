@@ -15,6 +15,9 @@ contract FundMe {
 
     uint256 public minimumUSD = 5 * 1e18;
 
+    address[] public funders;
+    mapping(address funder => uint256 amountFunded) public addressToAmountedFunded;
+
     // payable 붙은 함수나 주소만 이더를 전송 받을 수 있다.
     function fund() public payable  {
         // Allow users to send money
@@ -29,6 +32,8 @@ contract FundMe {
         // What is revert ?
         // Undo any actions that have been done, and send the remaining gas back
         // 지금까지 실행된 작업들을 되돌리고, 남은 가스를 사용자에게 반환함
+        funders.push(msg.sender);
+        addressToAmountedFunded[msg.sender] = addressToAmountedFunded[msg.sender] + msg.value;
     }
 
     // eth 의 가격을 얻는 함수
