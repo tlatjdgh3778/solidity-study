@@ -8,20 +8,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { PriceConverter } from "./PriceConverter.sol";
+import "./PriceConverter.sol";
 
+// 772,273 gas 
+// 가스를 낮추는 방법 
+// 1. constant keyword =>
+// 752,335
+// 2. immutable keyword
+// 729,164
 contract FundMe {
     using PriceConverter for uint256;
 
-    uint256 public minimumUSD = 5 * 1e18;
+    uint256 public constant MINIMUM_USD = 50 * 1e18;
 
     address[] public funders;
     mapping(address funder => uint256 amountFunded) public addressToAmountedFunded;
 
-    address public owner;
+    address public immutable i_owner;
 
     constructor() {
-        owner = msg.sender;
+        i_owner = msg.sender;
     }
 
     // payable 붙은 함수나 주소만 이더를 전송 받을 수 있다.
@@ -30,8 +36,8 @@ contract FundMe {
         // Have a minimum money sent
         // 1. How do we send ETH to this contract ?
         // 전역 변수 msg, msg.value 로 전송된 이더 금액을 확인할 수 있
-        // require(getConversionRate(msg.value) >= minimumUSD, "didn't send enough ETH"); // 1e18 = 1 ETH = 1,000,000,000,000,000,000 = 1 * 10 ** 18
-        require(msg.value.getConversionRate() >= minimumUSD, "didn't send enough ETH"); // 1e18 = 1 ETH = 1,000,000,000,000,000,000 = 1 * 10 ** 18
+        // require(getConversionRate(msg.value) >= MINIMUM_USD, "didn't send enough ETH"); // 1e18 = 1 ETH = 1,000,000,000,000,000,000 = 1 * 10 ** 18
+        require(msg.value.getConversionRate() >= MINIMUM_USD, "didn't send enough ETH"); // 1e18 = 1 ETH = 1,000,000,000,000,000,000 = 1 * 10 ** 18
         
         // 조건을 만족하지 않으면, 트랜잭션은 revert (되돌리기)됨
         // 거래가 revert 되면, 이 트랜잭션의 모든 상태 변경이 취소된다.
@@ -73,7 +79,7 @@ contract FundMe {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "You don't own this contract"); // revert if it's not the owner of this contract
+        require(msg.sender == i_owner, "You don't own this contract"); // revert if it's not the owner of this contract
         _;
     }
 }
