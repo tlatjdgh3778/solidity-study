@@ -10,6 +10,9 @@ pragma solidity ^0.8.24;
 
 import "./PriceConverter.sol";
 
+
+error NotOwner();
+
 // 772,273 gas 
 // 가스를 낮추는 방법 
 // 1. constant keyword =>
@@ -79,7 +82,10 @@ contract FundMe {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == i_owner, "You don't own this contract"); // revert if it's not the owner of this contract
+        // require(msg.sender == i_owner, "You don't own this contract"); // revert if it's not the owner of this contract
+        if(msg.sender != i_owner) {
+            revert NotOwner();
+        }
         _;
     }
 }
