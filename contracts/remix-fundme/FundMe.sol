@@ -35,9 +35,16 @@ contract FundMe {
         // Undo any actions that have been done, and send the remaining gas back
         // 지금까지 실행된 작업들을 되돌리고, 남은 가스를 사용자에게 반환함
         funders.push(msg.sender);
-        addressToAmountedFunded[msg.sender] = addressToAmountedFunded[msg.sender] + msg.value;
+        addressToAmountedFunded[msg.sender] += msg.value;
     }
-    // function widthraw() public {}
+    function widthraw() public {
+        // for loop
+        // for(/* starting index, ending index, step amount */)
+        for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++){
+            address funder = funders[funderIndex];
+            addressToAmountedFunded[funder] = 0;
+        }
+    }
 }
 
 // oracle
