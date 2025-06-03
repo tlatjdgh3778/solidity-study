@@ -43,9 +43,7 @@ contract FundMe {
         funders.push(msg.sender);
         addressToAmountedFunded[msg.sender] += msg.value;
     }
-    function widthraw() public {
-        require(msg.sender == owner, "You don't own this contract"); // revert if it's not the owner of this contract
-
+    function widthraw() public onlyOwner {
         // for loop
         // for(/* starting index, ending index, step amount */)
         for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++){
@@ -72,6 +70,11 @@ contract FundMe {
         (bool callSuccess, ) = payable(msg.sender).call{ value: address(this).balance }("");
         // add revert
         require(callSuccess, "Call failed");
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You don't own this contract"); // revert if it's not the owner of this contract
+        _;
     }
 }
 
