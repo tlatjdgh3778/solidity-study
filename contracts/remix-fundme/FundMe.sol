@@ -52,7 +52,7 @@ contract FundMe {
         funders.push(msg.sender);
         addressToAmountedFunded[msg.sender] += msg.value;
     }
-    function widthraw() public onlyOwner {
+    function withdraw() public onlyOwner {
         // for loop
         // for(/* starting index, ending index, step amount */)
         for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++){
